@@ -1,4 +1,4 @@
-# memorize
+# client VueJS
 
 ## Project setup
 ```

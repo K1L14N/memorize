@@ -1,0 +1,19 @@
+{
+  "name": "memorize-server",
+  "version": "0.0.1",
+  "description": "A NodeJS RESTful API that connects with MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "K1L14N",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.13",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.18.4"
+  }
+}

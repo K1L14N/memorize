@@ -1,6 +1,6 @@
 <template>
   <div class="table">
-    <Tile v-for="tile in table" :key=tile.id :word=tile.word :id=tile.id></Tile>
+    <Tile v-for="tile in table" :key=tile.id :initWord=tile.word :initId=tile.id></Tile>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default {
 .table {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-auto-rows: minmax(50px, auto);
+  grid-auto-rows: minmax(20px, auto);
   background-color: rgba(134, 187, 134, 0.872);
 }
 </style>

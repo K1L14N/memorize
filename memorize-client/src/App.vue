@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <Table :table="tableObj"></Table>
+    
     <div class="form">
       <input v-model="id" type="text" placeholder="id">
       <input v-model="word" type="text" placeholder="word">
@@ -10,6 +10,8 @@
     
     <label class="fullWidth" v-if="errorMessage === '' ">You entered {{ id }}: {{ word }}</label>
     <label class="fullWidth" v-if="errorMessage !== '' && sendOnce">{{ errorMessage }}</label>
+  
+    <Table :table="tableObj"></Table>
   </div>
 </template>
 
