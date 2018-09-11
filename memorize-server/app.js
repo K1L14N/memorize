@@ -5,9 +5,25 @@ const bodyParser = require('body-parser')
 const tableRoutes = require('./api/routes/tables')
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://admin:' + process.env.MONGO_ATLAS_PW + '@keos-rbrco.mongodb.net/test?retryWrites=true', {
-    useNewUrlParser: true
-})
+const options = {
+    useNewUrlParser: true,
+    autoIndex: false, // Don't build indexes
+    reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+    reconnectInterval: 500, // Reconnect every 500ms
+    poolSize: 10, // Maintain up to 10 socket connections
+    // If not connected, return errors immediately rather than waiting for reconnect
+    bufferMaxEntries: 0,
+    connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
+    socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+    family: 4 // Use IPv4, skip trying IPv6
+  };
+mongoose.connect('mongodb+srv://admin:' + process.env.MONGO_ATLAS_PW + '@keos-rbrco.mongodb.net/test?retryWrites=true', options)
+  .then(result => {
+      console.log("Connected to MongoDB cluster");
+  })
+  .catch(err => {
+      console.log("Failed to connect to MongoDB cluster", err);
+  })
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({
     extended: false

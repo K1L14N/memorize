@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import Table from "./components/Table.vue";
+import * as axios from 'axios'
+import Table from "./components/Table"
 
 export default {
   name: "app",
@@ -33,14 +34,23 @@ export default {
     };
   },
   methods: {
-    onAdd: function(id, word) {
+    onAdd: function(id/* , word */) {
       this.sendOnce = true
       var pattern = /^\d+$/;
       if (!pattern.test(id)) {
         this.errorMessage = "Invalid id"
       } else {
         this.errorMessage = ""
-        this.tableObj.push({id, word})
+        // this.tableObj.push({id, word})
+        axios.post(process.env.VUE_APP_ROOT_API + "/tables", {
+          name: "VueJS AXIOS"
+        })
+        // .then(result => {
+        //   console.log(result);
+        // })
+        // .catch(err => {
+        //   console.log(err);
+        // })
       }
     }
   }

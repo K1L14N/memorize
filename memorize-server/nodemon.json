@@ -1,5 +1,6 @@
 {
     "env": {
-        "MONGO_ATLAS_PW": "istrator"
+        "MONGO_ATLAS_PW": "istrator",
+        "PORT": "3000"
     }
 }
