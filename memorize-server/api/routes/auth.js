@@ -31,7 +31,7 @@ module.exports = function (passport) {
 
         // Hashing password
         const finalUser = new User({
-            _id: new mongoose.Types.ObjectId(),
+            id: new mongoose.Types.ObjectId(),
             username: user.username,
             password: user.password
         });
@@ -51,7 +51,6 @@ module.exports = function (passport) {
                 user
             }
         } = req;
-
         if (!user.username) {
             return res.status(422).json({
                 errors: {
@@ -69,23 +68,29 @@ module.exports = function (passport) {
         }
 
         return passport.authenticate('local', {
-            session: false
-        }, (err, passportUser, info) => {
-            if (err) {
-                return next(err);
-            }
+                session: false
+            },
+            (err, passportUser, info) => {
+                if (err) {
+                    res.status(500).json({
+                        error: err.message
+                    })
+                }
+                if (!passportUser) {
+                    res.status(400).json({
+                        message: "Invalid username or password",
+                        info: info
+                    })
+                }
+                if (passportUser) {
+                    const user = new User(passportUser);
+                    user.token = user.generateJWT();
 
-            if (passportUser) {
-                const user = passportUser;
-                user.token = passportUser.generateJWT();
-
-                return res.json({
-                    user: user.toAuthJSON()
-                });
-            }
-
-            return status(400).info;
-        })(req, res, next);
+                    return res.status(200).json({
+                        user: user.toAuthJSON()
+                    });
+                }
+            })(req, res, next);
     });
 
     router.get('/current', access.required, (req, res, next) => {
@@ -95,9 +100,9 @@ module.exports = function (passport) {
             }
         } = req;
         return User.findById(id)
-        .then((user) => {
-            if (!user) {
-                    return res.sendStatus(400);
+            .then((user) => {
+                if (!user) {
+                    return res.status(400);
                 }
 
                 return res.json({
