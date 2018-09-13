@@ -117,7 +117,7 @@ module.exports = function (passport) {
             });
     });
 
-    router.get('/all', access.optional, (req, res, next) => {
+    router.get('/all', access.required, (req, res, next) => {
         return User.find()
             .exec()
             .then(users => {
