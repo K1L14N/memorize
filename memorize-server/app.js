@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const passport = require('passport')
-require('./passport')(passport)
+require('./config/passport')(passport)
 
 const authRoutes = require('./api/routes/auth')(passport)
 const tableRoutes = require('./api/routes/tables')
@@ -60,6 +60,7 @@ app.use((req, res, next) => {
     next()
 })
 
+// app.use('/api', require('./api/index'))
 app.use('/auth', authRoutes)
 app.use('/tables', tableRoutes)
 

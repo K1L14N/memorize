@@ -2,8 +2,6 @@ var mongoose = require('mongoose')
 var bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
 
-var schema = mongoose.Schema;
-
 var userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     username: {
