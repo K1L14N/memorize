@@ -2,9 +2,15 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
-const tableRoutes = require('./api/routes/tables')
 const mongoose = require('mongoose')
+const session = require('express-session')
+const passport = require('passport')
+require('./passport')(passport)
 
+const authRoutes = require('./api/routes/auth')(passport)
+const tableRoutes = require('./api/routes/tables')
+
+// MongoDB connection through Mongoose
 const options = {
     useNewUrlParser: true,
     autoIndex: false, // Don't build indexes
@@ -24,12 +30,23 @@ mongoose.connect('mongodb+srv://admin:' + process.env.MONGO_ATLAS_PW + '@keos-rb
   .catch(err => {
       console.log("Failed to connect to MongoDB cluster", err);
   })
+
+// Express configuration
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({
     extended: false
 }))
 app.use(bodyParser.json())
+app.use(session({
+    secret: "verysecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000*60*10 },
+  }))
+app.use(passport.initialize());
+app.use(passport.session());
 
+// Header to handle CORS
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*")
     res.header(
@@ -43,6 +60,7 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use('/auth', authRoutes)
 app.use('/tables', tableRoutes)
 
 app.use((req, res, next) => {
