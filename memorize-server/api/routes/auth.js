@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
 const access = require('../access')
-const passport = require('passport')
 
 module.exports = function (passport) {
     router.post('/signup', access.optional, (req, res, next) => {
@@ -31,7 +30,7 @@ module.exports = function (passport) {
 
         // Hashing password
         const finalUser = new User({
-            id: new mongoose.Types.ObjectId(),
+            _id: new mongoose.Types.ObjectId(),
             username: user.username,
             password: user.password
         });
@@ -78,15 +77,17 @@ module.exports = function (passport) {
                 }
                 if (!passportUser) {
                     res.status(400).json({
-                        message: "Invalid username or password",
-                        info: info
+                        message: "Passport can not retrieve your id"
                     })
                 }
                 if (passportUser) {
-                    const user = new User(passportUser);
+                    const user = new User({
+                        _id: passportUser.id,
+                        username: passportUser.username
+                    });
                     user.token = user.generateJWT();
 
-                    return res.status(200).json({
+                    res.status(200).json({
                         user: user.toAuthJSON()
                     });
                 }
@@ -108,8 +109,28 @@ module.exports = function (passport) {
                 return res.json({
                     user: user.toAuthJSON()
                 });
+            })
+            .catch(err => {
+                return res.status(500).json({
+                    error: err.message
+                })
             });
     });
+
+    router.get('/all', access.optional, (req, res, next) => {
+        return User.find()
+            .exec()
+            .then(users => {
+                res.status(200).json({
+                    users
+                })
+            })
+            .catch(err => {
+                res.status(500).json({
+                    error: err.message
+                })
+            })
+    })
 
     return router;
 };
