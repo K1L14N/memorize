@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const passport = require('passport')
 require('./config/passport')(passport)
-
+const access = require('./api/access')
 const authRoutes = require('./api/routes/auth')(passport)
 const tableRoutes = require('./api/routes/tables')
 
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 
 // app.use('/api', require('./api/index'))
 app.use('/auth', authRoutes)
-app.use('/tables', tableRoutes)
+app.use('/tables', access.pass, tableRoutes)
 
 app.use((req, res, next) => {
     const error = new Error('Not found')

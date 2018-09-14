@@ -80,18 +80,27 @@ module.exports = function (passport) {
                         message: "Passport can not retrieve your id"
                     })
                 }
-                if (passportUser) {
-                    const user = new User({
-                        _id: passportUser.id,
-                        username: passportUser.username
-                    });
-                    user.token = user.generateJWT();
+                const user = new User({
+                    _id: passportUser.id,
+                    username: passportUser.username
+                });
+                user.token = user.generateJWT();
 
-                    res.status(200).json({
-                        user: user.toAuthJSON()
-                    });
-                }
-            })(req, res, next);
+                // Adding information to the header, allows to use `req.isAuthenticated()`
+                req.logIn(user, function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            message: "Passport can not log you in"
+                        })
+                        return;
+                    }
+                    return;
+                });
+
+                res.status(200).json({
+                    user: user.toAuthJSON()
+                });
+            })(req, res, next)
     });
 
     router.get('/current', access.required, (req, res, next) => {
@@ -116,6 +125,19 @@ module.exports = function (passport) {
                 })
             });
     });
+
+    router.get('/logout', access.required, (req, res, next) => {
+        req.logOut();
+        if (req.isAuthenticated()) {
+            res.status(400).json({
+                message: "An error occured while logout"
+            })
+        } else {
+            res.status(200).json({
+                message: "Logout successful"
+            })
+        }
+    })
 
     router.get('/all', access.required, (req, res, next) => {
         return User.find()

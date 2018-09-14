@@ -9,6 +9,10 @@ const getTokenFromHeaders = (req) => {
   return null;
 };
 
+const loggedIn = (req, res, next) => {
+  req.isAuthenticated() ? next() : res.status(401).json({ message: "You are not logged in"})
+}
+
 const access = {
   required: jwt({
     secret: 'verysecret',
@@ -21,6 +25,7 @@ const access = {
     getToken: getTokenFromHeaders,
     credentialsRequired: false,
   }),
+  pass: loggedIn
 };
 
 module.exports = access;

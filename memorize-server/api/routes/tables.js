@@ -1,14 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
-
 const Table = require('../models/Table')
+const access = require('../access')
 
 router.get('/', (req, res, next) => {
     Table.find()
         .exec()
         .then(docs => {
-            console.log(docs)
             if (docs.length >= 0) {
                 res.status(200).json(docs)
             } else {
@@ -31,7 +30,6 @@ router.post('/', (req, res, next) => {
         name: req.body.name,
     })
     table.save().then(doc => {
-        console.log(doc)
         if (doc) {
             res.status(200).json({
                 table
@@ -42,7 +40,6 @@ router.post('/', (req, res, next) => {
             })
         }
     }).catch(err => {
-        console.error(err)
         res.status(500).json({
             error: err
         })
@@ -54,11 +51,9 @@ router.get('/:tableId', (req, res, next) => {
     Table.findById(id)
         .exec()
         .then(doc => {
-            console.log(doc)
             res.status(200).json(doc)
         })
         .catch(err => {
-            console.log(err)
             res.status(500).json({
                 error: err
             })
@@ -77,11 +72,9 @@ router.patch('/:tableId', (req, res, next) => {
     Table.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
-        console.log(result)
         res.status(200).json(result)
     })
     .catch(err => {
-        console.log(err)
         res.status(500).json({
             error: err
         })
@@ -98,7 +91,6 @@ router.delete('/:tableId', (req, res, next) => {
             })
         })
         .catch(err => {
-            console.log(err)
             res.status(500).json({
                 error: err
             })
