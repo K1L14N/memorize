@@ -1,17 +1,25 @@
 <template>
-  <div class="card">{{card}}</div>
+  <div class="card" @click="flip">{{cardValue}}</div>
 </template>
 
 <script>
 export default {
   props: {
     card: String
+  },
+  methods: {
+    flip() {
+      this.cardValue = this.cardValue
+        .split("")
+        .reverse()
+        .join("");
+    }
+  },
+  data() {
+    return {
+      cardValue: this.card
+    };
   }
-  //   data() {
-  //     return {
-  //       card: String
-  //     };
-  //   }
 };
 </script>
 
@@ -19,7 +27,7 @@ export default {
 .card {
   width: auto;
   height: 90px;
-  margin: 0;
   border: 1px solid black;
+  align-content: center;
 }
 </style>
