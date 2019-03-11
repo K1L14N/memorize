@@ -1,4 +1,4 @@
-export const cards = [
+export const initCards = [
   { img: "0", nb: 0 },
   { img: "1", nb: 1 },
   { img: "2", nb: 2 },

@@ -6,9 +6,9 @@
       <button class="btn" @click="onReset">Reset</button>
     </div>
 
-    <div class="container">
+    <div class="container" v-if="isSync">
       <div v-for="card in cards" :key="card.nb">
-        <Card :_card="card"/>
+        <Card :card="card"/>
       </div>
     </div>
   </div>
@@ -16,20 +16,30 @@
 
 <script>
 import Card from "./Card.vue";
-import { cards } from "../assets/data.js";
+import { initCards } from "../assets/data.js";
 
 export default {
   data() {
     return {
-      cards: cards
+      cards: initCards,
+      isSync: true
     };
   },
   methods: {
     onScramble() {
-      console.log("scramble");
+      this.isSync = false;
+      for (let i = initCards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this.cards[i], this.cards[j]] = [initCards[j], initCards[i]];
+      }
+      this.isSync = true;
     },
     onReset() {
-      console.log("reset");
+      this.isSync = false;
+      this.cards = this.cards.sort((a, b) => {
+        return a.nb - b.nb;
+      });
+      this.isSync = true;
     }
   },
   components: {
@@ -40,16 +50,13 @@ export default {
 
 <style scoped>
 .container {
-  width: 900px;
-  height: auto;
-  /* border: 1px solnb black; */
-  margin: 10px auto;
+  width: 90%;
+  margin: auto;
   /* background-image: url("./courses/calendar.png"); */
-  /* background-color: red; */
   /* background-size: cover; */
   box-shadow: 6px 6px 20px gray;
   display: grid;
-  grid-template-columns: repeat(10, 10%);
+  grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
   grid-template-areas:
     "card0 card10 card20 card30 card40 card50 card60 card70 card80 card90"

@@ -5,7 +5,7 @@
 <script>
 export default {
   props: {
-    _card: {
+    card: {
       nb: Number,
       img: String
     }
@@ -18,7 +18,6 @@ export default {
   },
   data() {
     return {
-      card: this._card,
       flip: true
     };
   }
@@ -27,8 +26,11 @@ export default {
 
 <style scoped>
 .card {
-  width: auto;
-  height: 90px;
+  background-color: #4fc08d;
+  display: inline-block;
+  height: 0;
+  padding-bottom: 100%;
+  width: 100%;
   border: 1px solid black;
   align-content: center;
 }
