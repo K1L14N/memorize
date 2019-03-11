@@ -1,23 +1,25 @@
 <template>
-  <div class="card" @click="flip">{{cardValue}}</div>
+  <div class="card" @click="onFlip">{{flip ? card.nb : card.img}}</div>
 </template>
 
 <script>
 export default {
   props: {
-    card: String
+    _card: {
+      nb: Number,
+      img: String
+    }
   },
   methods: {
-    flip() {
-      this.cardValue = this.cardValue
-        .split("")
-        .reverse()
-        .join("");
+    onFlip() {
+      this.flip = !this.flip;
+      console.log(this.card.nb);
     }
   },
   data() {
     return {
-      cardValue: this.card
+      card: this._card,
+      flip: true
     };
   }
 };
