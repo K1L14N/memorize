@@ -51,7 +51,9 @@ export default {
 <style scoped>
 .container {
   width: 90%;
+  /* width: 90%; */
   margin: auto;
+  margin-bottom: 30px;
   /* background-image: url("./courses/calendar.png"); */
   /* background-size: cover; */
   box-shadow: 6px 6px 20px gray;
